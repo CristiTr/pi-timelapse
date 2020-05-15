@@ -1,9 +1,8 @@
-// Run raspistill command to take a photo with the camera module
-
 const child_process = require("child_process");
 const INTERVAL = process.env.INTERVAL || 10000;
 const TIME_IN_H = process.env.TIME_IN_H || 1;
-const INTERATIONS = (TIME_IN_H * 60 * 60 * 1000) / INTERVAL; // 8h
+const INTERATIONS = (TIME_IN_H * 60 * 60 * 1000) / INTERVAL;
+const START_COUNT_FROM = process.env.START_COUNT_FROM || 1;
 
 let i = 1;
 let takingPhoto = false;
@@ -13,20 +12,21 @@ console.log("\n\n " + t);
 console.log("Hours:" + TIME_IN_H);
 console.log("Interval: " + INTERVAL);
 console.log("Iterations: " + INTERATIONS);
+console.log("Start file nr from: " + START_COUNT_FROM);
 console.log("Start taking photos");
 
 const interval = setInterval(() => {
-  console.log(i + " of " + INTERATIONS);
-
   //check exit condition
   if (i > INTERATIONS) {
     clearInterval(interval);
     console.log("Stopped taking photos");
   } else {
+    console.log(i + " of " + INTERATIONS);
     if (!takingPhoto) {
+      let fileNr = i + START_COUNT_FROM;
       //take a photo
       takingPhoto = true;
-      let filename = "data/image_" + i + ".jpg";
+      let filename = "data/image_" + fileNr + ".jpg";
       let args = [
         "-w",
         "1280",
